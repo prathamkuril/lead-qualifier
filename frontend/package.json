@@ -1,7 +1,10 @@
 {
-  "name": "frontend",
+  "name": "lead-qualifier-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "React dashboard for viewing and filtering sales leads",
+  "author": "Growth AI",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",

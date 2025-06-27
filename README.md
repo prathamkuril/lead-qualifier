@@ -38,3 +38,26 @@ npm run dev
 
 The dashboard will be available at `http://localhost:5173` and API requests to
 `/api` will automatically proxy to the backend.
+
+## Building the Frontend
+
+To generate a production build and preview it locally:
+
+```bash
+cd frontend
+npm run build
+npm run preview
+```
+
+The optimized assets will be written to `frontend/dist/`.
+
+## Regenerating Sample Data
+
+If you want to create a fresh set of synthetic leads, run:
+
+```bash
+pip install -r requirements.txt  # installs Faker
+python data/generate_data.py
+```
+
+This will overwrite `data/leads.csv` with new randomly generated leads used by the API.
