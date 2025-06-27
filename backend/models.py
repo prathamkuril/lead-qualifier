@@ -38,7 +38,9 @@ class Event(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(String)
     action = Column(String)
-    metadata = Column(Text)
+    # ``metadata`` is reserved by SQLAlchemy's declarative API, so we map the
+    # database column named ``metadata`` to the ``meta`` attribute instead.
+    meta = Column("metadata", Text)
     occurred_at = Column(DateTime, default=datetime.utcnow)
 
 

@@ -59,7 +59,7 @@ def create_event(event: EventIn, db: Session = Depends(get_db)):
     db_event = Event(
         user_id=event.userId,
         action=event.action,
-        metadata=json.dumps(event.metadata),
+        meta=json.dumps(event.metadata),
         occurred_at=event.timestamp,
     )
     db.add(db_event)
