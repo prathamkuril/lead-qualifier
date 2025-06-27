@@ -1,1 +1,14 @@
 /.venv
+
+# Python
+__pycache__/
+*.py[cod]
+*.db
+data/app.db
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Environment files
+.env
