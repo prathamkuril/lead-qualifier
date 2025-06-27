@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+
+// Chart.js is loaded globally via a script tag in index.html
+declare const Chart: any;
 
 interface Lead {
   id: number;
@@ -15,9 +18,13 @@ type View = 'table' | 'chart';
 const App: React.FC = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [industry, setIndustry] = useState('');
-  const [size, setSize] = useState<string>('');
+  const [size, setSize] = useState<number>(0);
   const [view, setView] = useState<View>('table');
   const [sourceCounts, setSourceCounts] = useState<Record<string, number>>({});
+
+  // Refs for rendering the Chart.js graph
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const chartRef = useRef<any>(null);
 
   const postEvent = async (action: string, metadata: Record<string, any>) => {
     try {
@@ -39,7 +46,7 @@ const App: React.FC = () => {
   const fetchLeads = async () => {
     const params = new URLSearchParams();
     if (industry) params.append('industry', industry);
-    if (size) params.append('size', size);
+    if (size) params.append('size', size.toString());
     const res = await fetch(`/api/leads?${params.toString()}`);
     const data: Lead[] = await res.json();
     setLeads(data);
@@ -59,19 +66,56 @@ const App: React.FC = () => {
     fetchLeads();
   }, [industry, size]);
 
+  // Render the chart whenever the data or view changes
+  useEffect(() => {
+    if (view !== 'chart' || !canvasRef.current) return;
+    const ctx = canvasRef.current.getContext('2d');
+    if (!ctx) return;
+
+    if (chartRef.current) {
+      chartRef.current.destroy();
+    }
+
+    chartRef.current = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: Object.keys(sourceCounts),
+        datasets: [
+          {
+            label: 'Leads',
+            data: Object.values(sourceCounts),
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+        },
+      },
+    });
+  }, [view, sourceCounts]);
+
   const onIndustryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setIndustry(e.target.value);
     postEvent('industry_filter', { industry: e.target.value });
   };
 
   const onSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSize(e.target.value);
-    postEvent('size_filter', { size: e.target.value });
+    const value = parseInt(e.target.value, 10);
+    setSize(value);
+    postEvent('size_filter', { size: value });
   };
 
   const onToggleView = (v: View) => {
     setView(v);
     postEvent('toggle_view', { view: v });
+  };
+
+  const onRefresh = () => {
+    fetchLeads();
+    postEvent('refresh', {});
   };
 
   return (
@@ -89,9 +133,17 @@ const App: React.FC = () => {
           </select>
         </label>
         <label style={{ marginLeft: '1rem' }}>
-          Min Size:
-          <input type="number" value={size} onChange={onSizeChange} style={{ width: '6rem' }} />
+          Min Size: {size}
+          <input
+            type="range"
+            min="0"
+            max="500"
+            value={size}
+            onChange={onSizeChange}
+            style={{ width: '10rem', verticalAlign: 'middle', marginLeft: '0.5rem' }}
+          />
         </label>
+        <button onClick={onRefresh} style={{ marginLeft: '1rem' }}>Refresh</button>
         <button onClick={() => onToggleView('table')} style={{ marginLeft: '1rem' }}>Table</button>
         <button onClick={() => onToggleView('chart')} style={{ marginLeft: '0.5rem' }}>Chart</button>
       </div>
@@ -122,15 +174,7 @@ const App: React.FC = () => {
           </tbody>
         </table>
       ) : (
-        <div>
-          {Object.entries(sourceCounts).map(([src, count]) => (
-            <div key={src} style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
-              <div style={{ width: '80px' }}>{src}</div>
-              <div style={{ background: 'steelblue', height: '20px', width: `${count * 20}px`, marginRight: '4px' }} />
-              <span>{count}</span>
-            </div>
-          ))}
-        </div>
+        <canvas ref={canvasRef} />
       )}
     </div>
   );
