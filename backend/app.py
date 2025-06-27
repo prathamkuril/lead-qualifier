@@ -2,12 +2,19 @@ from datetime import datetime
 import json
 
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from .models import Lead, Event, SessionLocal, init_db
 
 app = FastAPI(title="Lead Qualifier API")
+
+
+@app.get("/", include_in_schema=False)
+def index() -> RedirectResponse:
+    """Redirect the bare root path to the interactive API docs."""
+    return RedirectResponse(url="/docs")
 
 
 def get_db():
