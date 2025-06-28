@@ -78,9 +78,10 @@ These events are stored in the SQLite database for later analysis.
 ## LLM Enrichment
 
 If an `OPENAI_API_KEY` environment variable is present, the backend can enrich
-leads on request. Add `enrich=true` to the `/api/leads` query string and each
-lead will include additional `quality` and `summary` fields populated by
-OpenAI's `gpt-4-turbo` model. The prompt used is:
+leads on request. The React dashboard now sends the `enrich=true` flag
+automatically, so with a valid API key each lead row will include additional
+`quality` and `summary` fields populated by OpenAI's `gpt-4-turbo` model. The
+prompt used is:
 
 ```
 Classify the quality of this lead as High, Medium, or Low based on industry and
