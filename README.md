@@ -61,3 +61,16 @@ python data/generate_data.py
 ```
 
 This will overwrite `data/leads.csv` with new randomly generated leads used by the API.
+
+## Event Tracking
+
+Every interaction in the dashboard is sent to the `/api/events` endpoint. A
+unique `userId` is persisted in `localStorage` so events from the same browser
+session can be correlated. Each event record includes:
+
+- `userId` – the session identifier
+- `action` – the name of the action (e.g. `refresh`)
+- `metadata` – optional JSON payload with context
+- `timestamp` – ISO 8601 time of the event
+
+These events are stored in the SQLite database for later analysis.

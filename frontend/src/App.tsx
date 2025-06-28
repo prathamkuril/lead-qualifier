@@ -22,6 +22,16 @@ const App: React.FC = () => {
   const [view, setView] = useState<View>('table');
   const [sourceCounts, setSourceCounts] = useState<Record<string, number>>({});
 
+  // Persist a unique identifier so events can be tied to a user session
+  const [userId] = useState(() => {
+    let id = localStorage.getItem('userId');
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem('userId', id);
+    }
+    return id;
+  });
+
   // Refs for rendering the Chart.js graph
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const chartRef = useRef<any>(null);
@@ -32,7 +42,7 @@ const App: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: 'demo',
+          userId,
           action,
           metadata,
           timestamp: new Date().toISOString(),
