@@ -74,3 +74,35 @@ session can be correlated. Each event record includes:
 - `timestamp` – ISO 8601 time of the event
 
 These events are stored in the SQLite database for later analysis.
+
+## LLM Enrichment
+
+If an `OPENAI_API_KEY` environment variable is present, the backend can enrich
+leads on request. The React dashboard now sends the `enrich=true` flag
+automatically, so with a valid API key each lead row will include additional
+`quality` and `summary` fields populated by OpenAI's `gpt-4-turbo` model. The
+prompt used is:
+
+```
+Classify the quality of this lead as High, Medium, or Low based on industry and
+employee size. Provide also one short sentence summary of the company. Respond
+in JSON with keys 'quality' and 'summary'.
+```
+
+Example enriched response:
+
+```json
+{
+  "id": 1,
+  "name": "Alice Smith",
+  "company": "Acme Corp",
+  "industry": "Manufacturing",
+  "size": 200,
+  "source": "PPC",
+  "created_at": "2025-06-01T10:23:00Z",
+  "quality": "High",
+  "summary": "Acme Corp is a leading manufacturing firm specializing in..."
+}
+```
+
+If no API key is configured, these fields will be `null`.

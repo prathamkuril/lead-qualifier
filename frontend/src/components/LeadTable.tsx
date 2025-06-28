@@ -8,6 +8,8 @@ export interface Lead {
   size: number;
   source: string;
   created_at: string;
+  quality?: string | null;
+  summary?: string | null;
 }
 
 const LeadTable: React.FC<{ leads: Lead[] }> = ({ leads }) => (
@@ -20,6 +22,8 @@ const LeadTable: React.FC<{ leads: Lead[] }> = ({ leads }) => (
         <th>Size</th>
         <th>Source</th>
         <th>Created</th>
+        <th>Quality</th>
+        <th>Summary</th>
       </tr>
     </thead>
     <tbody>
@@ -31,6 +35,8 @@ const LeadTable: React.FC<{ leads: Lead[] }> = ({ leads }) => (
           <td>{lead.size}</td>
           <td>{lead.source}</td>
           <td>{new Date(lead.created_at).toLocaleDateString()}</td>
+          <td>{lead.quality ?? '-'}</td>
+          <td>{lead.summary ?? '-'}</td>
         </tr>
       ))}
     </tbody>

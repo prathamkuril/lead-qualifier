@@ -41,6 +41,7 @@ const App: React.FC = () => {
     const params = new URLSearchParams();
     if (industry) params.append('industry', industry);
     if (size) params.append('size', size.toString());
+    params.append('enrich', 'true');
     const res = await fetch(`/api/leads?${params.toString()}`);
     const data: Lead[] = await res.json();
     setLeads(data);
