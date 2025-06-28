@@ -6,7 +6,7 @@ from typing import Any, Dict
 
 from fastapi import FastAPI, Depends
 from fastapi.responses import RedirectResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from sqlalchemy.orm import Session
 
 from .models import Lead, Event, SessionLocal, init_db
@@ -49,8 +49,7 @@ class LeadOut(BaseModel):
     quality: str | None = None
     summary: str | None = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class EventIn(BaseModel):
