@@ -10,6 +10,10 @@ const App: React.FC = () => {
   const [industry, setIndustry] = useState('');
   const [size, setSize] = useState<number>(0);
   const [view, setView] = useState<View>('table');
+  const [darkMode, setDarkMode] = useState(() => {
+    const stored = localStorage.getItem('darkMode');
+    return stored ? stored === 'true' : false;
+  });
   const [sourceCounts, setSourceCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
   const requestId = useRef(0);
@@ -69,6 +73,11 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    document.body.classList.toggle('dark', darkMode);
+    localStorage.setItem('darkMode', String(darkMode));
+  }, [darkMode]);
+
+  useEffect(() => {
     fetchLeads();
   }, [industry, size]);
 
@@ -97,6 +106,10 @@ const App: React.FC = () => {
     setIndustry('');
     setSize(0);
     postEvent('reset_filters', {});
+  };
+
+  const onToggleDarkMode = () => {
+    setDarkMode((prev) => !prev);
   };
 
   const onSort = (key: keyof Lead) => {
@@ -142,6 +155,8 @@ const App: React.FC = () => {
         onRefresh={onRefresh}
         onReset={onReset}
         onToggleView={onToggleView}
+        darkMode={darkMode}
+        onToggleDarkMode={onToggleDarkMode}
         loading={loading}
       />
 

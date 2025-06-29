@@ -11,6 +11,8 @@ interface Props {
   onRefresh: () => void;
   onReset: () => void;
   onToggleView: (v: View) => void;
+  darkMode: boolean;
+  onToggleDarkMode: () => void;
   loading: boolean;
 }
 
@@ -23,6 +25,8 @@ const FilterBar: React.FC<Props> = ({
   onRefresh,
   onReset,
   onToggleView,
+  darkMode,
+  onToggleDarkMode,
   loading,
 }) => (
   <div className="controls">
@@ -65,6 +69,9 @@ const FilterBar: React.FC<Props> = ({
         Chart
       </button>
     </div>
+    <button onClick={onToggleDarkMode} className="dark-toggle">
+      {darkMode ? 'Light Mode' : 'Dark Mode'}
+    </button>
   </div>
 );
 
