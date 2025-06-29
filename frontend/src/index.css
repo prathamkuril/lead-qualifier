@@ -19,10 +19,21 @@ body {
 
 .controls {
   display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.controls .line1,
+.controls .line2 {
+  display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
-  margin-bottom: 1rem;
+}
+
+.controls .line2 {
+  width: 100%;
 }
 
 .controls label {

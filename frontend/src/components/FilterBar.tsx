@@ -32,55 +32,59 @@ const FilterBar: React.FC<Props> = ({
   loading,
 }) => (
   <div className="controls">
-    <div className="view-toggle">
-      <button
-        onClick={() => onToggleView('table')}
-        className={view === 'table' ? 'active' : ''}
-      >
-        Table
-      </button>
-      <button
-        onClick={() => onToggleView('chart')}
-        className={view === 'chart' ? 'active' : ''}
-      >
-        Chart
+    <div className="line1">
+      <label>
+        Industry:
+        <select value={industry} onChange={onIndustryChange}>
+          <option value="">All</option>
+          <option value="Technology">Technology</option>
+          <option value="Manufacturing">Manufacturing</option>
+          <option value="Healthcare">Healthcare</option>
+          <option value="Finance">Finance</option>
+        </select>
+      </label>
+      <label>
+        Min Size: {size}
+        <input
+          type="range"
+          min="0"
+          max="500"
+          value={size}
+          onChange={onSizeChange}
+        />
+      </label>
+      <label>
+        Search:
+        <input
+          type="text"
+          value={search}
+          onChange={onSearchChange}
+          placeholder="Name or Company"
+        />
+      </label>
+      <button onClick={onRefresh}>Refresh</button>
+      <button onClick={onReset} disabled={loading} className="reset-button">
+        Reset
+        {loading && <span className="spinner" />}
       </button>
     </div>
-    <label>
-      Industry:
-      <select value={industry} onChange={onIndustryChange}>
-        <option value="">All</option>
-        <option value="Technology">Technology</option>
-        <option value="Manufacturing">Manufacturing</option>
-        <option value="Healthcare">Healthcare</option>
-        <option value="Finance">Finance</option>
-      </select>
-    </label>
-    <label>
-      Min Size: {size}
-      <input
-        type="range"
-        min="0"
-        max="500"
-        value={size}
-        onChange={onSizeChange}
-      />
-    </label>
-    <label>
-      Search:
-      <input
-        type="text"
-        value={search}
-        onChange={onSearchChange}
-        placeholder="Name or Company"
-      />
-    </label>
-    <button onClick={onRefresh}>Refresh</button>
-    <button onClick={onReset} disabled={loading} className="reset-button">
-      Reset
-      {loading && <span className="spinner" />}
-    </button>
-    <button onClick={onExportCSV} className="export-button">Export CSV</button>
+    <div className="line2">
+      <div className="view-toggle">
+        <button
+          onClick={() => onToggleView('table')}
+          className={view === 'table' ? 'active' : ''}
+        >
+          Table
+        </button>
+        <button
+          onClick={() => onToggleView('chart')}
+          className={view === 'chart' ? 'active' : ''}
+        >
+          Chart
+        </button>
+      </div>
+      <button onClick={onExportCSV} className="export-button">Export CSV</button>
+    </div>
   </div>
 );
 
