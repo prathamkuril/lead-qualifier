@@ -9,7 +9,9 @@ interface Props {
   onIndustryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onSizeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRefresh: () => void;
+  onReset: () => void;
   onToggleView: (v: View) => void;
+  loading: boolean;
 }
 
 const FilterBar: React.FC<Props> = ({
@@ -19,7 +21,9 @@ const FilterBar: React.FC<Props> = ({
   onIndustryChange,
   onSizeChange,
   onRefresh,
+  onReset,
   onToggleView,
+  loading,
 }) => (
   <div className="controls">
     <label>
@@ -43,6 +47,10 @@ const FilterBar: React.FC<Props> = ({
       />
     </label>
     <button onClick={onRefresh}>Refresh</button>
+    <button onClick={onReset} disabled={loading} className="reset-button">
+      Reset
+      {loading && <span className="spinner" />}
+    </button>
     <div className="view-toggle">
       <button
         onClick={() => onToggleView('table')}
