@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-
-declare const Chart: any;
+import Chart from 'chart.js/auto';
 
 interface Props {
   counts: Record<string, number>;
@@ -8,7 +7,7 @@ interface Props {
 
 const SourceChart: React.FC<Props> = ({ counts }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const chartRef = useRef<any>(null);
+  const chartRef = useRef<Chart | null>(null);
 
   useEffect(() => {
     if (!canvasRef.current) return;
