@@ -19,11 +19,11 @@ const SourceChart: React.FC<Props> = ({ counts }) => {
       chartRef.current.destroy();
     }
 
-    chartRef.current = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: Object.keys(counts),
-        datasets: [
+  chartRef.current = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(counts),
+      datasets: [
           {
             label: 'Leads',
             data: Object.values(counts),
@@ -31,11 +31,14 @@ const SourceChart: React.FC<Props> = ({ counts }) => {
           },
         ],
       },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: 'Leads by Source' },
       },
-    });
+    },
+  });
   }, [counts]);
 
   return <canvas ref={canvasRef} />;
