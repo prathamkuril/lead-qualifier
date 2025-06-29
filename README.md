@@ -39,6 +39,11 @@ npm run dev
 The dashboard will be available at `http://localhost:5173` and API requests to
 `/api` will automatically proxy to the backend.
 
+The table view displays a running count of the leads returned by the API. This
+number updates whenever you adjust the filters so you can quickly see how many
+records match your criteria. Clicking a column header sorts by that field and
+highlights the active sort column.
+
 ## Building the Frontend
 
 To generate a production build and preview it locally:
@@ -74,6 +79,15 @@ session can be correlated. Each event record includes:
 - `timestamp` – ISO 8601 time of the event
 
 These events are stored in the SQLite database for later analysis.
+
+The dashboard emits events for:
+
+- `page_load` – when the app first mounts
+- `industry_filter` and `size_filter` – whenever a filter is changed
+- `toggle_view` – switching between the table and chart views
+- `refresh` – manual refresh of the data
+- `reset_filters` – clearing all filters
+- `sort` – clicking a column header to change the sort order
 
 ## LLM Enrichment
 
