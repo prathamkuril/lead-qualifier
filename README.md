@@ -120,3 +120,48 @@ Example enriched response:
 ```
 
 If no API key is configured, these fields will be `null`.
+
+## SQL Usage Queries
+
+Two example queries show how event data can be inspected in SQLite.
+
+**1. Top industries filtered in the last 7 days**
+
+```sql
+SELECT
+    json_extract(metadata, '$.industry') AS industry,
+    COUNT(*) AS uses
+FROM events
+WHERE action = 'industry_filter'
+  AND occurred_at >= datetime('now', '-7 days')
+GROUP BY industry
+ORDER BY uses DESC
+LIMIT 3;
+```
+
+Output:
+
+```
+('', 6)
+('Manufacturing', 4)
+('Technology', 3)
+```
+
+**2. View toggle counts**
+
+```sql
+SELECT
+    json_extract(metadata, '$.view') AS view,
+    COUNT(*) AS cnt
+FROM events
+WHERE action = 'toggle_view'
+GROUP BY view
+ORDER BY cnt DESC;
+```
+
+Output:
+
+```
+('table', 29)
+('chart', 29)
+```
