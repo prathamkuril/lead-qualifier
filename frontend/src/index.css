@@ -89,3 +89,22 @@ body {
 .leads-table tbody tr:nth-child(even) {
   background: #fbfbfb;
 }
+
+.leads-table th {
+  cursor: pointer;
+  user-select: none;
+}
+
+.leads-table th.sort-asc::after,
+.leads-table th.sort-desc::after {
+  margin-left: 0.25rem;
+  font-size: 0.7rem;
+}
+
+.leads-table th.sort-asc::after {
+  content: '▲';
+}
+
+.leads-table th.sort-desc::after {
+  content: '▼';
+}
