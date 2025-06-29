@@ -4,31 +4,15 @@ body {
   font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
-  --bg-color: #f7f8fa;
-  --text-color: #333;
-  --container-bg: #fff;
-  --control-bg: #f0f0f0;
-  --control-hover: #e0e0e0;
-  --border-color: #ccc;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-body.dark {
-  --bg-color: #1e1e1e;
-  --text-color: #e2e2e2;
-  --container-bg: #2b2b2b;
-  --control-bg: #3a3a3a;
-  --control-hover: #4a4a4a;
-  --border-color: #555;
+  background-color: #f7f8fa;
+  color: #333;
 }
 
 .container {
   max-width: 900px;
   margin: 2rem auto;
   padding: 1.5rem;
-  background: var(--container-bg);
+  background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -50,19 +34,17 @@ body.dark {
 .controls input[type='text'] {
   margin-left: 0.5rem;
   padding: 0.3rem;
-  border: 1px solid var(--border-color);
-  background: var(--control-bg);
-  color: var(--text-color);
+  border: 1px solid #ccc;
+  background: #fff;
   border-radius: 4px;
 }
 
 .controls button {
   padding: 0.4rem 0.8rem;
-  border: 1px solid var(--border-color);
-  background: var(--control-bg);
+  border: 1px solid #ccc;
+  background: #f0f0f0;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
 .controls button:disabled {
@@ -70,26 +52,28 @@ body.dark {
   cursor: not-allowed;
 }
 
-.controls button.active,
 .controls button:hover {
-  background: var(--control-hover);
+  background: #e0e0e0;
+}
+
+.controls button.active {
+  background: #cce4ff;
 }
 
 .spinner {
   display: inline-block;
   width: 14px;
   height: 14px;
-  border: 2px solid var(--border-color);
-  border-top-color: var(--text-color);
+  border: 2px solid #ccc;
+  border-top-color: #333;
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
   margin-left: 0.5rem;
   vertical-align: middle;
 }
 
-.controls .dark-toggle {
+.controls .export-button {
   margin-left: auto;
-  font-size: 0.9rem;
 }
 
 @keyframes spin {
@@ -110,20 +94,18 @@ body.dark {
   text-align: left;
 }
 
+
 .leads-table thead {
-  background: var(--control-bg);
+  background: #f5f5f5;
 }
 
 .leads-table tbody tr:nth-child(even) {
   background: #fbfbfb;
 }
 
-body.dark .leads-table tbody tr:nth-child(even) {
-  background: #2e2e2e;
-}
 
 .leads-table tbody tr:hover {
-  background: var(--control-hover);
+  background: #e0e0e0;
 }
 
 .leads-table th {
@@ -147,7 +129,7 @@ body.dark .leads-table tbody tr:nth-child(even) {
 
 .leads-table th.sort-asc,
 .leads-table th.sort-desc {
-  background: var(--control-bg);
+  background: #eef2ff;
 }
 
 .lead-count {

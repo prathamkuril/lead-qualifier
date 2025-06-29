@@ -11,10 +11,6 @@ const App: React.FC = () => {
   const [size, setSize] = useState<number>(0);
   const [search, setSearch] = useState('');
   const [view, setView] = useState<View>('table');
-  const [darkMode, setDarkMode] = useState(() => {
-    const stored = localStorage.getItem('darkMode');
-    return stored ? stored === 'true' : false;
-  });
   const [loading, setLoading] = useState(false);
   const requestId = useRef(0);
 
@@ -67,10 +63,6 @@ const App: React.FC = () => {
     postEvent('page_load', {});
   }, []);
 
-  useEffect(() => {
-    document.body.classList.toggle('dark', darkMode);
-    localStorage.setItem('darkMode', String(darkMode));
-  }, [darkMode]);
 
   useEffect(() => {
     fetchLeads();
@@ -104,6 +96,7 @@ const App: React.FC = () => {
   const onReset = () => {
     setIndustry('');
     setSize(0);
+    setSearch('');
     postEvent('reset_filters', {});
   };
 
@@ -137,9 +130,6 @@ const App: React.FC = () => {
     postEvent('export_csv', {});
   };
 
-  const onToggleDarkMode = () => {
-    setDarkMode((prev) => !prev);
-  };
 
   const onSort = (key: keyof Lead) => {
     if (sortKey === key) {
@@ -205,8 +195,6 @@ const App: React.FC = () => {
         onReset={onReset}
         onToggleView={onToggleView}
         onExportCSV={onExportCSV}
-        darkMode={darkMode}
-        onToggleDarkMode={onToggleDarkMode}
         loading={loading}
       />
 

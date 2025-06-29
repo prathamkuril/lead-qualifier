@@ -14,8 +14,6 @@ interface Props {
   onReset: () => void;
   onToggleView: (v: View) => void;
   onExportCSV: () => void;
-  darkMode: boolean;
-  onToggleDarkMode: () => void;
   loading: boolean;
 }
 
@@ -31,8 +29,6 @@ const FilterBar: React.FC<Props> = ({
   onReset,
   onToggleView,
   onExportCSV,
-  darkMode,
-  onToggleDarkMode,
   loading,
 }) => (
   <div className="controls">
@@ -70,7 +66,7 @@ const FilterBar: React.FC<Props> = ({
       Reset
       {loading && <span className="spinner" />}
     </button>
-    <button onClick={onExportCSV}>Export CSV</button>
+    <button onClick={onExportCSV} className="export-button">Export CSV</button>
     <div className="view-toggle">
       <button
         onClick={() => onToggleView('table')}
@@ -85,9 +81,6 @@ const FilterBar: React.FC<Props> = ({
         Chart
       </button>
     </div>
-    <button onClick={onToggleDarkMode} className="dark-toggle">
-      {darkMode ? 'Light Mode' : 'Dark Mode'}
-    </button>
   </div>
 );
 
