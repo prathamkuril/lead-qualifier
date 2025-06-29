@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f7f8fa;
+  color: #333;
+}
+
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.controls label {
+  font-weight: 500;
+}
+
+.controls select,
+.controls input[type='range'] {
+  margin-left: 0.5rem;
+}
+
+.controls button {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #ccc;
+  background: #f0f0f0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.controls button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.controls button.active,
+.controls button:hover {
+  background: #e0e0e0;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #ccc;
+  border-top-color: #333;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.leads-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.leads-table th,
+.leads-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.leads-table thead {
+  background: #f5f5f5;
+}
+
+.leads-table tbody tr:nth-child(even) {
+  background: #fbfbfb;
+}
+
+.leads-table th {
+  cursor: pointer;
+  user-select: none;
+}
+
+.leads-table th.sort-asc::after,
+.leads-table th.sort-desc::after {
+  margin-left: 0.25rem;
+  font-size: 0.7rem;
+}
+
+.leads-table th.sort-asc::after {
+  content: '▲';
+}
+
+.leads-table th.sort-desc::after {
+  content: '▼';
+}
+
+.leads-table th.sort-asc,
+.leads-table th.sort-desc {
+  background: #eef2ff;
+}
+
+.lead-count {
+  margin: 0.5rem 0;
+  font-weight: 500;
+}
