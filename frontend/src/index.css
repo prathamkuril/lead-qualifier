@@ -72,6 +72,12 @@ body {
   vertical-align: middle;
 }
 
+.controls .view-toggle {
+  margin-right: auto;
+  display: flex;
+  gap: 0.5rem;
+}
+
 .controls .export-button {
   margin-left: auto;
 }

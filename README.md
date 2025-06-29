@@ -73,6 +73,7 @@ Tracked actions include:
 - `refresh` – manual data refresh
 - `reset_filters` – clearing filters
 - `sort` – column sorting
+- `export_csv` – downloading the current table as CSV
 
 Events are stored in the SQLite database.
 

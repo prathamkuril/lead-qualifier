@@ -32,6 +32,20 @@ const FilterBar: React.FC<Props> = ({
   loading,
 }) => (
   <div className="controls">
+    <div className="view-toggle">
+      <button
+        onClick={() => onToggleView('table')}
+        className={view === 'table' ? 'active' : ''}
+      >
+        Table
+      </button>
+      <button
+        onClick={() => onToggleView('chart')}
+        className={view === 'chart' ? 'active' : ''}
+      >
+        Chart
+      </button>
+    </div>
     <label>
       Industry:
       <select value={industry} onChange={onIndustryChange}>
@@ -67,20 +81,6 @@ const FilterBar: React.FC<Props> = ({
       {loading && <span className="spinner" />}
     </button>
     <button onClick={onExportCSV} className="export-button">Export CSV</button>
-    <div className="view-toggle">
-      <button
-        onClick={() => onToggleView('table')}
-        className={view === 'table' ? 'active' : ''}
-      >
-        Table
-      </button>
-      <button
-        onClick={() => onToggleView('chart')}
-        className={view === 'chart' ? 'active' : ''}
-      >
-        Chart
-      </button>
-    </div>
   </div>
 );
 
