@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import FilterBar, { View } from './components/FilterBar';
 import LeadTable, { Lead } from './components/LeadTable';
 import SourceChart from './components/SourceChart';
@@ -9,6 +9,7 @@ const App: React.FC = () => {
   const [size, setSize] = useState<number>(0);
   const [view, setView] = useState<View>('table');
   const [sourceCounts, setSourceCounts] = useState<Record<string, number>>({});
+  const requestId = useRef(0);
 
   // Persist a unique identifier so events can be tied to a user session
   const [userId] = useState(() => {
@@ -38,12 +39,14 @@ const App: React.FC = () => {
   };
 
   const fetchLeads = async () => {
+    const id = ++requestId.current;
     const params = new URLSearchParams();
     if (industry) params.append('industry', industry);
     if (size) params.append('size', size.toString());
     params.append('enrich', 'true');
     const res = await fetch(`/api/leads?${params.toString()}`);
     const data: Lead[] = await res.json();
+    if (id !== requestId.current) return;
     setLeads(data);
     const counts: Record<string, number> = {};
     data.forEach((l) => {

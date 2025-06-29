@@ -16,6 +16,9 @@ import openai
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 openai_client = openai.AsyncOpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
+# Cache enrichment results so we don't repeatedly call the LLM for the same lead
+enrichment_cache: dict[int, dict[str, str | None]] = {}
+
 app = FastAPI(title="Lead Qualifier API")
 
 
@@ -60,8 +63,13 @@ class EventIn(BaseModel):
 
 
 async def enrich_lead(lead: Lead) -> Dict[str, Any]:
+    if lead.id in enrichment_cache:
+        return enrichment_cache[lead.id]
+
     if not openai_client:
-        return {"quality": None, "summary": None}
+        result = {"quality": None, "summary": None}
+        enrichment_cache[lead.id] = result
+        return result
 
     prompt = (
         "Classify the quality of this lead as High, Medium, or Low based on "
@@ -79,12 +87,16 @@ async def enrich_lead(lead: Lead) -> Dict[str, Any]:
         )
         content = resp.choices[0].message.content
         data = json.loads(content)
-        return {
+        result = {
             "quality": data.get("quality"),
             "summary": data.get("summary"),
         }
+        enrichment_cache[lead.id] = result
+        return result
     except Exception:
-        return {"quality": None, "summary": None}
+        result = {"quality": None, "summary": None}
+        enrichment_cache[lead.id] = result
+        return result
 
 
 @app.get("/api/leads", response_model=list[LeadOut])
