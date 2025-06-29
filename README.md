@@ -83,7 +83,7 @@ These events are stored in the SQLite database for later analysis.
 The dashboard emits events for:
 
 - `page_load` – when the app first mounts
-- `industry_filter` and `size_filter` – whenever a filter is changed
+- `filter` – whenever the industry or size filter is changed
 - `toggle_view` – switching between the table and chart views
 - `refresh` – manual refresh of the data
 - `reset_filters` – clearing all filters
@@ -129,10 +129,11 @@ Two example queries show how event data can be inspected in SQLite.
 
 ```sql
 SELECT
-    json_extract(metadata, '$.industry') AS industry,
+    json_extract(metadata, '$.value') AS industry,
     COUNT(*) AS uses
 FROM events
-WHERE action = 'industry_filter'
+WHERE action = 'filter'
+  AND json_extract(metadata, '$.filterType') = 'industry'
   AND occurred_at >= datetime('now', '-7 days')
 GROUP BY industry
 ORDER BY uses DESC

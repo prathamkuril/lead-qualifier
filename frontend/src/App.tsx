@@ -74,13 +74,13 @@ const App: React.FC = () => {
 
   const onIndustryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setIndustry(e.target.value);
-    postEvent('industry_filter', { industry: e.target.value });
+    postEvent('filter', { filterType: 'industry', value: e.target.value });
   };
 
   const onSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10);
     setSize(value);
-    postEvent('size_filter', { size: value });
+    postEvent('filter', { filterType: 'size', value });
   };
 
   const onToggleView = (v: View) => {
