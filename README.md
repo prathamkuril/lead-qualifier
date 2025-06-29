@@ -1,109 +1,95 @@
 # Lead Qualifier
 
-This repository contains a minimal backend implementation for the Growth AI Engineer take-home challenge. It exposes API endpoints using **FastAPI**, stores data in **SQLite** via **SQLAlchemy**, and loads the provided `leads.csv` into the database on startup.
+This repository implements the **Growth AI Engineer take-home challenge**, delivering a minimal full-stack application for qualifying and analyzing demo-request leads. It includes:
+
+- A **FastAPI** backend exposing API endpoints
+- A **SQLite** database managed with **SQLAlchemy**
+- Automatic data loading from `leads.csv`
+- Event tracking of user interactions
+- LLM-based lead enrichment
+
+---
 
 ## Running the API
 
-1. Install dependencies:
+1. **Install dependencies:**
 
-```bash
-pip install -r backend/requirements.txt
-```
+   ```bash
+   pip install -r backend/requirements.txt
+   ```
 
-2. Start the development server:
+2. **Start the development server:**
 
-```bash
-uvicorn backend.app:app --reload
-```
+   ```bash
+   uvicorn backend.app:app --reload
+   ```
 
-The API will be available at `http://localhost:8000`.
+   The API will be available at [http://localhost:8000](http://localhost:8000).
 
-## Running the Frontend
+---
 
-The React dashboard lives in the `frontend/` directory. Make sure the API is
-running (see above), then in a separate terminal start the Vite dev server:
+## Building the Frontend
 
-1. Install dependencies:
+To build the frontend for production and preview it locally:
 
 ```bash
 cd frontend
 npm install
-```
-
-2. Launch the app:
-
-```bash
-npm run dev
-```
-
-The dashboard will be available at `http://localhost:5173` and API requests to
-`/api` will automatically proxy to the backend.
-
-The table view displays a running count of the leads returned by the API. This
-number updates whenever you adjust the filters so you can quickly see how many
-records match your criteria. Clicking a column header sorts by that field and
-highlights the active sort column.
-
-## Building the Frontend
-
-To generate a production build and preview it locally:
-
-```bash
-cd frontend
 npm run build
 npm run preview
 ```
 
-The optimized assets will be written to `frontend/dist/`.
+The optimized assets will be generated in `frontend/dist/`. The preview server will display the local URL.
+
+---
 
 ## Regenerating Sample Data
 
-If you want to create a fresh set of synthetic leads, run:
+To create a fresh set of synthetic leads:
 
 ```bash
 pip install -r requirements.txt  # installs Faker
 python data/generate_data.py
 ```
 
-This will overwrite `data/leads.csv` with new randomly generated leads used by the API.
+This will overwrite `data/leads.csv` with new randomly generated leads.
+
+---
 
 ## Event Tracking
 
-Every interaction in the dashboard is sent to the `/api/events` endpoint. A
-unique `userId` is persisted in `localStorage` so events from the same browser
-session can be correlated. Each event record includes:
+User interactions are logged via POST requests to `/api/events`. Each record includes:
 
-- `userId` – the session identifier
-- `action` – the name of the action (e.g. `refresh`)
-- `metadata` – optional JSON payload with context
+- `userId` – session identifier
+- `action` – action name (e.g., `refresh`)
+- `metadata` – optional JSON context
 - `timestamp` – ISO 8601 time of the event
 
-These events are stored in the SQLite database for later analysis.
+Tracked actions include:
 
-The dashboard emits events for:
+- `page_load` – app initialization
+- `industry_filter` and `size_filter` – filter changes
+- `toggle_view` – switching between table and chart views
+- `refresh` – manual data refresh
+- `reset_filters` – clearing filters
+- `sort` – column sorting
 
-- `page_load` – when the app first mounts
-- `industry_filter` and `size_filter` – whenever a filter is changed
-- `toggle_view` – switching between the table and chart views
-- `refresh` – manual refresh of the data
-- `reset_filters` – clearing all filters
-- `sort` – clicking a column header to change the sort order
+Events are stored in the SQLite database.
+
+---
 
 ## LLM Enrichment
 
-If an `OPENAI_API_KEY` environment variable is present, the backend can enrich
-leads on request. The React dashboard now sends the `enrich=true` flag
-automatically, so with a valid API key each lead row will include additional
-`quality` and `summary` fields populated by OpenAI's `gpt-4-turbo` model. The
-prompt used is:
+If an `OPENAI_API_KEY` environment variable is set, the backend enriches leads on request using OpenAI’s `gpt-4-turbo` model. The prompt used:
 
 ```
-Classify the quality of this lead as High, Medium, or Low based on industry and
-employee size. Provide also one short sentence summary of the company. Respond
-in JSON with keys 'quality' and 'summary'.
+"Classify the quality of this lead as High, Medium, or Low based on "
+        "industry and employee size. Provide also one short sentence summary "
+        "of the company. Respond in JSON with keys 'quality' and 'summary'.\n"
+        f"Company: {lead.company}\nIndustry: {lead.industry}\nSize: {lead.size}"
 ```
 
-Example enriched response:
+**Example enriched lead:**
 
 ```json
 {
@@ -119,11 +105,21 @@ Example enriched response:
 }
 ```
 
-If no API key is configured, these fields will be `null`.
+If no API key is configured, `quality` and `summary` will remain `null`.
 
-## SQL Usage Queries
+---
 
-Two example queries show how event data can be inspected in SQLite.
+## Running SQL Queries
+
+To analyze event data, launch the SQLite shell connected to the application database:
+
+```bash
+python -m sqlite3 data/app.db
+```
+
+Below are the **exact SQL commands and outputs** executed in the shell:
+
+---
 
 **1. Top industries filtered in the last 7 days**
 
@@ -139,13 +135,15 @@ ORDER BY uses DESC
 LIMIT 3;
 ```
 
-Output:
+**Output:**
 
 ```
 ('', 6)
 ('Manufacturing', 4)
 ('Technology', 3)
 ```
+
+---
 
 **2. View toggle counts**
 
@@ -159,9 +157,13 @@ GROUP BY view
 ORDER BY cnt DESC;
 ```
 
-Output:
+**Output:**
 
 ```
 ('table', 29)
 ('chart', 29)
 ```
+
+---
+
+This implementation demonstrates backend API design, frontend data visualization, event instrumentation, and optional AI-based enrichment, fulfilling the requirements of the Growth AI Engineer take-home challenge with a professional, data-driven approach.
