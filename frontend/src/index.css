@@ -19,10 +19,21 @@ body {
 
 .controls {
   display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.controls .line1,
+.controls .line2 {
+  display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
-  margin-bottom: 1rem;
+}
+
+.controls .line2 {
+  width: 100%;
 }
 
 .controls label {
@@ -30,8 +41,13 @@ body {
 }
 
 .controls select,
-.controls input[type='range'] {
+.controls input[type='range'],
+.controls input[type='text'] {
   margin-left: 0.5rem;
+  padding: 0.3rem;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 4px;
 }
 
 .controls button {
@@ -47,9 +63,12 @@ body {
   cursor: not-allowed;
 }
 
-.controls button.active,
 .controls button:hover {
   background: #e0e0e0;
+}
+
+.controls button.active {
+  background: #cce4ff;
 }
 
 .spinner {
@@ -62,6 +81,16 @@ body {
   animation: spin 0.6s linear infinite;
   margin-left: 0.5rem;
   vertical-align: middle;
+}
+
+.controls .view-toggle {
+  margin-right: auto;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.controls .export-button {
+  margin-left: auto;
 }
 
 @keyframes spin {
@@ -82,12 +111,18 @@ body {
   text-align: left;
 }
 
+
 .leads-table thead {
   background: #f5f5f5;
 }
 
 .leads-table tbody tr:nth-child(even) {
   background: #fbfbfb;
+}
+
+
+.leads-table tbody tr:hover {
+  background: #e0e0e0;
 }
 
 .leads-table th {
