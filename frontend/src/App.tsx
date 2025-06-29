@@ -145,6 +145,8 @@ const App: React.FC = () => {
         loading={loading}
       />
 
+      <p className="lead-count">Number of Leads: {sortedLeads.length}</p>
+
       {view === 'table' ? (
         <LeadTable
           leads={sortedLeads}

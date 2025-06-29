@@ -108,3 +108,13 @@ body {
 .leads-table th.sort-desc::after {
   content: '▼';
 }
+
+.leads-table th.sort-asc,
+.leads-table th.sort-desc {
+  background: #eef2ff;
+}
+
+.lead-count {
+  margin: 0.5rem 0;
+  font-weight: 500;
+}
