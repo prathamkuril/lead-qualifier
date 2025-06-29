@@ -5,6 +5,8 @@ import SourceChart from './components/SourceChart';
 
 const App: React.FC = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [sortKey, setSortKey] = useState<keyof Lead | ''>('');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
   const [industry, setIndustry] = useState('');
   const [size, setSize] = useState<number>(0);
   const [view, setView] = useState<View>('table');
@@ -97,6 +99,37 @@ const App: React.FC = () => {
     postEvent('reset_filters', {});
   };
 
+  const onSort = (key: keyof Lead) => {
+    if (sortKey === key) {
+      setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
+      postEvent('sort', { key, direction: sortDir === 'asc' ? 'desc' : 'asc' });
+    } else {
+      setSortKey(key);
+      setSortDir('asc');
+      postEvent('sort', { key, direction: 'asc' });
+    }
+  };
+
+  const sortedLeads = React.useMemo(() => {
+    if (!sortKey) return leads;
+    const data = [...leads];
+    data.sort((a, b) => {
+      const av = a[sortKey];
+      const bv = b[sortKey];
+      if (av === null || av === undefined) return 1;
+      if (bv === null || bv === undefined) return -1;
+      if (typeof av === 'number' && typeof bv === 'number') {
+        return sortDir === 'asc' ? av - bv : bv - av;
+      }
+      const as = String(av).toLowerCase();
+      const bs = String(bv).toLowerCase();
+      if (as < bs) return sortDir === 'asc' ? -1 : 1;
+      if (as > bs) return sortDir === 'asc' ? 1 : -1;
+      return 0;
+    });
+    return data;
+  }, [leads, sortKey, sortDir]);
+
   return (
     <div className="container">
       <h1>Leads Dashboard</h1>
@@ -113,7 +146,12 @@ const App: React.FC = () => {
       />
 
       {view === 'table' ? (
-        <LeadTable leads={leads} />
+        <LeadTable
+          leads={sortedLeads}
+          sortKey={sortKey}
+          sortDir={sortDir}
+          onSort={onSort}
+        />
       ) : (
         <SourceChart counts={sourceCounts} />
       )}
