@@ -5,12 +5,15 @@ export type View = 'table' | 'chart';
 interface Props {
   industry: string;
   size: number;
+  search: string;
   view: View;
   onIndustryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onSizeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRefresh: () => void;
   onReset: () => void;
   onToggleView: (v: View) => void;
+  onExportCSV: () => void;
   darkMode: boolean;
   onToggleDarkMode: () => void;
   loading: boolean;
@@ -19,12 +22,15 @@ interface Props {
 const FilterBar: React.FC<Props> = ({
   industry,
   size,
+  search,
   view,
   onIndustryChange,
   onSizeChange,
+  onSearchChange,
   onRefresh,
   onReset,
   onToggleView,
+  onExportCSV,
   darkMode,
   onToggleDarkMode,
   loading,
@@ -50,11 +56,21 @@ const FilterBar: React.FC<Props> = ({
         onChange={onSizeChange}
       />
     </label>
+    <label>
+      Search:
+      <input
+        type="text"
+        value={search}
+        onChange={onSearchChange}
+        placeholder="Name or Company"
+      />
+    </label>
     <button onClick={onRefresh}>Refresh</button>
     <button onClick={onReset} disabled={loading} className="reset-button">
       Reset
       {loading && <span className="spinner" />}
     </button>
+    <button onClick={onExportCSV}>Export CSV</button>
     <div className="view-toggle">
       <button
         onClick={() => onToggleView('table')}

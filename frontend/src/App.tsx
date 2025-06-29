@@ -9,12 +9,12 @@ const App: React.FC = () => {
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
   const [industry, setIndustry] = useState('');
   const [size, setSize] = useState<number>(0);
+  const [search, setSearch] = useState('');
   const [view, setView] = useState<View>('table');
   const [darkMode, setDarkMode] = useState(() => {
     const stored = localStorage.getItem('darkMode');
     return stored ? stored === 'true' : false;
   });
-  const [sourceCounts, setSourceCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
   const requestId = useRef(0);
 
@@ -57,11 +57,6 @@ const App: React.FC = () => {
       const data: Lead[] = await res.json();
       if (id !== requestId.current) return;
       setLeads(data);
-      const counts: Record<string, number> = {};
-      data.forEach((l) => {
-        counts[l.source] = (counts[l.source] || 0) + 1;
-      });
-      setSourceCounts(counts);
     } finally {
       if (id === requestId.current) setLoading(false);
     }
@@ -92,6 +87,10 @@ const App: React.FC = () => {
     postEvent('size_filter', { size: value });
   };
 
+  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
   const onToggleView = (v: View) => {
     setView(v);
     postEvent('toggle_view', { view: v });
@@ -106,6 +105,36 @@ const App: React.FC = () => {
     setIndustry('');
     setSize(0);
     postEvent('reset_filters', {});
+  };
+
+  const onExportCSV = () => {
+    const header = [
+      'id',
+      'name',
+      'company',
+      'industry',
+      'size',
+      'source',
+      'created_at',
+      'quality',
+      'summary',
+    ];
+    const csv = [
+      header.join(','),
+      ...filteredLeads.map((l) =>
+        header
+          .map((h) => `"${String((l as any)[h] ?? '').replace(/"/g, '""')}"`)
+          .join(',')
+      ),
+    ].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'leads.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    postEvent('export_csv', {});
   };
 
   const onToggleDarkMode = () => {
@@ -143,34 +172,55 @@ const App: React.FC = () => {
     return data;
   }, [leads, sortKey, sortDir]);
 
+  const filteredLeads = React.useMemo(() => {
+    if (!search) return sortedLeads;
+    const q = search.toLowerCase();
+    return sortedLeads.filter(
+      (l) =>
+        l.name.toLowerCase().includes(q) ||
+        l.company.toLowerCase().includes(q)
+    );
+  }, [sortedLeads, search]);
+
+  const chartCounts = React.useMemo(() => {
+    const counts: Record<string, number> = {};
+    filteredLeads.forEach((l) => {
+      counts[l.source] = (counts[l.source] || 0) + 1;
+    });
+    return counts;
+  }, [filteredLeads]);
+
   return (
     <div className="container">
       <h1>Leads Dashboard</h1>
       <FilterBar
         industry={industry}
         size={size}
+        search={search}
         view={view}
         onIndustryChange={onIndustryChange}
         onSizeChange={onSizeChange}
+        onSearchChange={onSearchChange}
         onRefresh={onRefresh}
         onReset={onReset}
         onToggleView={onToggleView}
+        onExportCSV={onExportCSV}
         darkMode={darkMode}
         onToggleDarkMode={onToggleDarkMode}
         loading={loading}
       />
 
-      <p className="lead-count">Number of Leads: {sortedLeads.length}</p>
+      <p className="lead-count">Number of Leads: {filteredLeads.length}</p>
 
       {view === 'table' ? (
         <LeadTable
-          leads={sortedLeads}
+          leads={filteredLeads}
           sortKey={sortKey}
           sortDir={sortDir}
           onSort={onSort}
         />
       ) : (
-        <SourceChart counts={sourceCounts} />
+        <SourceChart counts={chartCounts} />
       )}
     </div>
   );

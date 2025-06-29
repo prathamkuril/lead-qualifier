@@ -46,8 +46,14 @@ body.dark {
 }
 
 .controls select,
-.controls input[type='range'] {
+.controls input[type='range'],
+.controls input[type='text'] {
   margin-left: 0.5rem;
+  padding: 0.3rem;
+  border: 1px solid var(--border-color);
+  background: var(--control-bg);
+  color: var(--text-color);
+  border-radius: 4px;
 }
 
 .controls button {
