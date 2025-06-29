@@ -9,6 +9,8 @@ This repository implements the **Growth AI Engineer take-home challenge**, deliv
 - LLM-based lead enrichment
 
 ---
+# Video Walktrough : [Click here!](https://drive.google.com/file/d/1OUEb_B1_2B9mkM5hzS7VZDzlEMthFmo8/view?usp=sharing)
+
 
 ## Running the API
 
