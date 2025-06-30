@@ -147,7 +147,7 @@ LIMIT 3;
 
 ---
 
-**2. View toggle counts**
+**2. View toggle preference**
 
 ```sql
 SELECT
