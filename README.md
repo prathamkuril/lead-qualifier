@@ -10,6 +10,8 @@ This repository implements the **Growth AI Engineer take-home challenge**, deliv
 
 ---
 
+# Video Walkthrough : [Click here!](https://drive.google.com/file/d/1OUEb_B1_2B9mkM5hzS7VZDzlEMthFmo8/view?usp=sharing)
+
 ## Running the API
 
 1. **Install dependencies:**
@@ -48,7 +50,6 @@ The optimized assets will be generated in `frontend/dist/`. The preview server w
 To create a fresh set of synthetic leads:
 
 ```bash
-pip install -r requirements.txt  # installs Faker
 python data/generate_data.py
 ```
 
@@ -126,7 +127,7 @@ Below are the **exact SQL commands and outputs** executed in the shell:
 
 ```sql
 SELECT
-    json_extract(metadata, '$.industry') AS industry,
+    COALESCE(NULLIF(json_extract(metadata, '$.industry'), ''), 'All') AS industry,
     COUNT(*) AS uses
 FROM events
 WHERE action = 'industry_filter'
@@ -139,9 +140,9 @@ LIMIT 3;
 **Output:**
 
 ```
-('', 6)
-('Manufacturing', 4)
-('Technology', 3)
+('Manufacturing', 16)
+('Technology', 9)
+('All', 7)
 ```
 
 ---
@@ -151,18 +152,19 @@ LIMIT 3;
 ```sql
 SELECT
     json_extract(metadata, '$.view') AS view,
-    COUNT(*) AS cnt
+    ROUND(100.0 * COUNT(*) /
+        (SELECT COUNT(*) FROM events WHERE action = 'toggle_view'), 2
+    ) AS pct
 FROM events
 WHERE action = 'toggle_view'
-GROUP BY view
-ORDER BY cnt DESC;
+GROUP BY view;
 ```
 
 **Output:**
 
 ```
-('table', 29)
-('chart', 29)
+('chart', 50.93)
+('table', 49.07)
 ```
 
 ---
