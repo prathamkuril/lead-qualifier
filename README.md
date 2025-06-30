@@ -127,7 +127,7 @@ Below are the **exact SQL commands and outputs** executed in the shell:
 
 ```sql
 SELECT
-    json_extract(metadata, '$.industry') AS industry,
+    COALESCE(NULLIF(json_extract(metadata, '$.industry'), ''), 'All') AS industry,
     COUNT(*) AS uses
 FROM events
 WHERE action = 'industry_filter'
@@ -140,30 +140,31 @@ LIMIT 3;
 **Output:**
 
 ```
-('', 6)
+('All', 6)
 ('Manufacturing', 4)
 ('Technology', 3)
 ```
 
 ---
 
-**2. View toggle counts**
+**2. View toggle preference**
 
 ```sql
 SELECT
     json_extract(metadata, '$.view') AS view,
-    COUNT(*) AS cnt
+    ROUND(100.0 * COUNT(*) /
+        (SELECT COUNT(*) FROM events WHERE action = 'toggle_view'), 2
+    ) AS pct
 FROM events
 WHERE action = 'toggle_view'
-GROUP BY view
-ORDER BY cnt DESC;
+GROUP BY view;
 ```
 
 **Output:**
 
 ```
-('table', 29)
-('chart', 29)
+('table', 50.0)
+('chart', 50.0)
 ```
 
 ---
